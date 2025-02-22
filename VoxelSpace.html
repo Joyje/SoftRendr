@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Voxel Space project demonstration</title>
-    <meta charset="UTF-8">
-    <meta name="description" content="Demonstration of the Voxel Space technique">
-    <meta name="author" content="Sebastian Macke">
-    <meta name="keywords" content="Voxel, VoxelSpace, Voxel Space, Comanche, landscape, rendering">
-    <style>
-        html, body {margin: 0; height: 100%; overflow: hidden}
-        canvas { width: 100%; height: 100%; }
-        a { color: white; }
-        #info {
-            position: absolute;
-            top: 0px;
-            width: 100%;
-            padding: 5px;
-            z-index:100;
-            color: white;
-            font-family: "Arial", Times, serif;
-            font-size: 120%;
-            }
-        #fps {
-            float: right;
-            position: absolute;
-            top: 0px;
-            right: 10px;
-            z-index:100;
-            padding: 5px;
-            color: white;
-            font-family: "Arial", Times, serif;
-            font-size: 120%;
-            }
-    </style>
+	<title>Voxel Space project demonstration</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="Demonstration of the Voxel Space technique">
+	<meta name="author" content="Sebastian Macke">
+	<meta name="keywords" content="Voxel, VoxelSpace, Voxel Space, Comanche, landscape, rendering">
+	<style>
+		html, body {margin: 0; height: 100%; overflow: hidden}
+		canvas { width: 100%; height: 100%; }
+		a { color: white; }
+		#info {
+			position: absolute;
+			top: 0px;
+			width: 100%;
+			padding: 5px;
+			z-index:100;
+			color: white;
+			font-family: "Arial", Times, serif;
+			font-size: 120%;
+			}
+		#fps {
+			float: right;
+			position: absolute;
+			top: 0px;
+			right: 10px;
+			z-index:100;
+			padding: 5px;
+			color: white;
+			font-family: "Arial", Times, serif;
+			font-size: 120%;
+			}
+	</style>
 </head>
 
 <body scroll="no">
@@ -40,8 +40,8 @@
 </div>
 
 <div id="info">
-    Fly controls
-    <b>WASD</b> or <b>Cursor Keys</b> or <b>left click</b> move, <b>R|F</b> up | down, <b>Q|E</b> pitch,
+	Fly controls
+	<b>WASD</b> or <b>Cursor Keys</b> or <b>left click</b> move, <b>R|F</b> up | down, <b>Q|E</b> pitch,
 <br>
 
 <select name="Mapselector" size="1" onchange="LoadMap(this.value);" value="C1W;D1">
@@ -85,7 +85,7 @@
 </div>
 
 <canvas id="fullscreenCanvas" width="800" height="400">
-    Your browser does not support the canvas element.
+	Your browser does not support the canvas element.
 </canvas>
 
 <script src="./js/camera.js"></script>
@@ -96,60 +96,60 @@
 "use strict";
 
 // for fps display
-var timelastframe = new Date().getTime();
-var frames = 0;
+let timelastframe = new Date().getTime();
+let frames = 0;
 
 function OnResizeWindow()
 {
-    screendata.canvas = document.getElementById('fullscreenCanvas');
+	screendata.canvas = document.getElementById('fullscreenCanvas');
 
-    var aspect = window.innerWidth / window.innerHeight;
+	let aspect = window.innerWidth / window.innerHeight;
 
-    screendata.canvas.width = window.innerWidth<800?window.innerWidth:800;
-    screendata.canvas.height = screendata.canvas.width / aspect;
+	screendata.canvas.width  = window.innerWidth<800?window.innerWidth:800;
+	screendata.canvas.height = screendata.canvas.width / aspect;
 
-    if (screendata.canvas.getContext)
-    {
-        screendata.context = screendata.canvas.getContext('2d');
-        screendata.imagedata = screendata.context.createImageData(screendata.canvas.width, screendata.canvas.height);
-    }
+	if (screendata.canvas.getContext)
+	{
+		screendata.context   = screendata.canvas.getContext('2d');
+		screendata.imagedata = screendata.context.createImageData(screendata.canvas.width, screendata.canvas.height);
+	}
 
-    screendata.bufarray = new ArrayBuffer(screendata.imagedata.width * screendata.imagedata.height * 4);
-    screendata.buf8     = new Uint8Array(screendata.bufarray);
-    screendata.buf32    = new Uint32Array(screendata.bufarray);
-    Draw();
+	screendata.bufarray = new ArrayBuffer(screendata.imagedata.width * screendata.imagedata.height * 4);
+	screendata.buf8  = new Uint8Array(screendata.bufarray);
+	screendata.buf32 = new Uint32Array(screendata.bufarray);
+	Draw();
 }
 
 function Init()
 {
-    for(var i=0; i<map.width*map.height; i++)
-    {
-        map.color[i] = 0xFF007050;
-        map.altitude[i] = 0;
-    }
+	for(let i=0; i<map.width*map.height; i++)
+	{
+		map.color[i] = 0xFF007050;
+		map.altitude[i] = 0;
+	}
 
-    LoadMap("C1W;D1");
-    OnResizeWindow();
+	LoadMap("C1W;D1");
+	OnResizeWindow();
 
-    // set event handlers for keyboard, mouse, touchscreen and window resize
-    var canvas = document.getElementById("fullscreenCanvas");
-    window.onkeydown    = DetectKeysDown;
-    window.onkeyup      = DetectKeysUp;
-    canvas.onmousedown  = DetectMouseDown;
-    canvas.onmouseup    = DetectMouseUp;
-    canvas.onmousemove  = DetectMouseMove;
-    canvas.ontouchstart = DetectMouseDown;
-    canvas.ontouchend   = DetectMouseUp;
-    canvas.ontouchmove  = DetectMouseMove;
+	// set event handlers for keyboard, mouse, touchscreen and window resize
+	let canvas = document.getElementById("fullscreenCanvas");
+	window.onkeydown    = DetectKeysDown;
+	window.onkeyup      = DetectKeysUp;
+	canvas.onmousedown  = DetectMouseDown;
+	canvas.onmouseup    = DetectMouseUp;
+	canvas.onmousemove  = DetectMouseMove;
+	canvas.ontouchstart = DetectMouseDown;
+	canvas.ontouchend   = DetectMouseUp;
+	canvas.ontouchmove  = DetectMouseMove;
 
-    window.onresize       = OnResizeWindow;
+	window.onresize     = OnResizeWindow;
 
-    window.setInterval(function(){
-        var current = new Date().getTime();
-        document.getElementById('fps').innerText = (frames / (current-timelastframe) * 1000).toFixed(1) + " fps";
-        frames = 0;
-        timelastframe = current;
-    }, 2000);
+	window.setInterval(function(){
+		let current = new Date().getTime();
+		document.getElementById('fps').innerText = (frames / (current-timelastframe) * 1000).toFixed(1) + " fps";
+		frames = 0;
+		timelastframe = current;
+	}, 2000);
 
 }
 
